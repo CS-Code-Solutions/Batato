@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Gestão — Batatô</title>
+  <link rel="icon" type="image/png" href="imagens/ico.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Archivo Black"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            bordo: {
+              950: '#230303',
+              900: '#2E0505',
+              800: '#3D0909',
+            },
+            batata: {
+              400: '#F8EA7E',
+              500: '#F4E268',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 10%, #470A0A 0%, #240303 60%, #1D0202 100%);
+      color: #FFFFFF;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-batata-500 selection:text-bordo-950 pb-16">
+
+  <!-- TELA DE LOGIN FIREBASE AUTH -->
+  <section id="login-screen" class="min-h-screen flex items-center justify-center px-5">
+    <div class="w-full max-w-sm rounded-[28px] bg-bordo-900/95 border border-batata-500/25 p-7 shadow-2xl">
+      <div class="text-center">
+        <img src="imagens/logo.png" alt="Batatô" class="w-28 mx-auto mb-3" />
+        <h1 class="font-display text-xl text-batata-500">Acesso Restrito</h1>
+        <p class="text-xs text-[#D9C3C3] mt-1">Autenticação de administrador Batatô</p>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="mt-6 flex flex-col gap-3.5">
+        <input
+          type="email"
+          id="admin-email"
+          required
+          autocomplete="username"
+          placeholder="E-mail administrativo"
+          class="w-full h-12 px-4 rounded-2xl bg-bordo-950 border border-white/15 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-batata-500"
+        />
+
+        <input
+          type="password"
+          id="admin-password"
+          required
+          autocomplete="current-password"
+          placeholder="Senha"
+          class="w-full h-12 px-4 rounded-2xl bg-bordo-950 border border-white/15 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-batata-500"
+        />
+
+        <p id="login-error" class="hidden text-xs text-red-400 text-center font-medium"></p>
+
+        <button
+          type="submit"
+          id="login-btn"
+          class="mt-1 w-full h-12 rounded-full bg-batata-500 hover:bg-batata-400 text-bordo-950 font-extrabold text-sm transition"
+        >
+          Entrar no Painel
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- PAINEL ADMINISTRATIVO -->
+  <section id="admin-panel" class="hidden max-w-2xl mx-auto px-5 pt-6">
+    <header class="flex items-center justify-between pb-5 border-b border-white/10">
+      <div>
+        <span class="font-display text-2xl text-batata-500">Batatô Admin</span>
+        <p id="admin-user-email" class="text-xs text-[#D9C3C3] mt-0.5"></p>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <a
+          href="index.html"
+          target="_blank"
+          class="px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition"
+        >
+          Ver Loja ↗
+        </a>
+        <button
+          onclick="handleLogout()"
+          class="px-4 py-2 rounded-full border border-red-400/40 text-red-300 hover:bg-red-500/10 text-xs font-bold transition"
+        >
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <!-- CONFIGURAÇÕES DE CONTATO / LINKS -->
+    <div class="mt-6 rounded-3xl bg-bordo-900/90 border border-white/10 p-5">
+      <h2 class="font-display text-base text-batata-500">Canais de Pedido</h2>
+      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div>
+          <label class="block text-xs text-[#D9C3C3] mb-1.5">WhatsApp (com DDI 55 + DDD)</label>
+          <input
+            type="text"
+            id="cfg-whatsapp"
+            placeholder="5551999999999"
+            class="w-full h-11 px-4 rounded-xl bg-bordo-950 border border-white/15 text-sm text-white focus:outline-none focus:border-batata-500"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs text-[#D9C3C3] mb-1.5">Link da Loja no iFood</label>
+          <input
+            type="url"
+            id="cfg-ifood"
+            placeholder="https://www.ifood.com.br/delivery/..."
+            class="w-full h-11 px-4 rounded-xl bg-bordo-950 border border-white/15 text-sm text-white focus:outline-none focus:border-batata-500"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- AÇÕES RÁPIDAS DE PROMOÇÃO -->
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 class="font-display text-lg text-batata-500">Cardápio & Promoções</h2>
+        <p class="text-xs text-[#D9C3C3]">Ative ou desative os descontos e ajuste preços em tempo real.</p>
+      </div>
+
+      <div class="flex gap-2">
+        <button
+          type="button"
+          onclick="toggleAllPromos(true)"
+          class="px-3.5 py-2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold text-xs hover:bg-emerald-500/30 transition"
+        >
+          Ativar Todas
+        </button>
+        <button
+          type="button"
+          onclick="toggleAllPromos(false)"
+          class="px-3.5 py-2 rounded-full bg-white/10 text-white/80 font-bold text-xs hover:bg-white/20 transition"
+        >
+          Desativar Todas
+        </button>
+      </div>
+    </div>
+
+    <!-- LISTA DE ITENS -->
+    <div id="admin-items-list" class="mt-4 flex flex-col gap-4"></div>
+
+    <!-- BOTÃO SALVAR NO FIREBASE -->
+    <div class="mt-7 sticky bottom-4 z-20">
+      <button
+        type="button"
+        id="save-btn"
+        onclick="saveToFirebase()"
+        class="w-full py-4 rounded-full bg-batata-500 hover:bg-batata-400 active:scale-[0.99] text-bordo-950 font-extrabold text-sm shadow-2xl shadow-black/80 transition"
+      >
+        Salvar Alterações no Cardápio
+      </button>
+      <p id="save-feedback" class="hidden text-center text-xs font-bold text-emerald-400 mt-2 bg-bordo-950/90 py-1.5 rounded-full">
+        ✓ Cardápio atualizado no site com sucesso!
+      </p>
+    </div>
+
+    <footer class="mt-10 text-center">
+      <a
+        href="https://www.instagram.com/cs_code_solutions?exln=Ym1mNDMzYTYxa3d6"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-[11px] text-white/35 hover:text-batata-500 transition"
+      >
+        Powered by CS Code Solutions
+      </a>
+    </footer>
+  </section>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { firebaseConfig } from "./js/firebase-config.js";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const INITIAL_PRODUCTS = [
+      {
+        id: "especial",
+        name: "Batatô Especial",
+        desc: "Frango, bacon e cheddar",
+        fullPrice: 32.90,
+        promoPrice: 29.61,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "Mais pedida",
+        image: "imagens/batatao-especial.jpg"
+      },
+      {
+        id: "frango",
+        name: "Batatô Frango cremoso com queijo mussarela!",
+        desc: "Frango cremoso",
+        fullPrice: 29.90,
+        promoPrice: 27.90,
+        discountBadge: "-7%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/frango-cremoso.jpg"
+      },
+      {
+        id: "bacon",
+        name: "Batatô Bacon",
+        desc: "Bacon crocante com queijo mussarela!",
+        fullPrice: 31.90,
+        promoPrice: 28.90,
+        discountBadge: "-9%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/batatao-especial.jpg"
+      },
+      {
+        id: "calabresa",
+        name: "Batatô Calabresa",
+        desc: "Calabresa acebolada e queijo derretido",
+        fullPrice: 30.90,
+        promoPrice: 27.81,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/calabresa.jpg"
+      },
+      {
+        id: "carne",
+        name: "Batatô Carne",
+        desc: "Carne desfiada e queijo cremoso",
+        fullPrice: 31.90,
+        promoPrice: 28.71,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/carne.jpg"
+      },
+      {
+        id: "brocolis",
+        name: "Batatô Brócolis com Bacon",
+        desc: "Brócolis, molho cremoso, queijo e bacon",
+        fullPrice: 27.90,
+        promoPrice: 25.11,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/frango-cremoso.jpg"
+      }
+    ];
+
+    let items = JSON.parse(JSON.stringify(INITIAL_PRODUCTS));
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        document.getElementById("login-screen").classList.add("hidden");
+        document.getElementById("admin-panel").classList.remove("hidden");
+        document.getElementById("admin-user-email").textContent = user.email;
+        await loadFromFirebase();
+      } else {
+        document.getElementById("login-screen").classList.remove("hidden");
+        document.getElementById("admin-panel").classList.add("hidden");
+      }
+    });
+
+    window.handleLogin = async function (e) {
+      e.preventDefault();
+      const email = document.getElementById("admin-email").value.trim();
+      const password = document.getElementById("admin-password").value;
+      const errEl = document.getElementById("login-error");
+      const btn = document.getElementById("login-btn");
+
+      errEl.classList.add("hidden");
+      btn.disabled = true;
+      btn.textContent = "Autenticando...";
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        errEl.textContent = "E-mail ou senha inválidos.";
+        errEl.classList.remove("hidden");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Entrar no Painel";
+      }
+    };
+
+    window.handleLogout = async function () {
+      await signOut(auth);
+    };
+
+    async function loadFromFirebase() {
+      try {
+        const snap = await getDoc(doc(db, "cardapio", "dados"));
+        if (snap.exists()) {
+          const data = snap.data();
+          if (Array.isArray(data.items) && data.items.length > 0) {
+            items = data.items;
+          }
+          if (data.settings) {
+            document.getElementById("cfg-whatsapp").value = data.settings.whatsappNumber || "";
+            document.getElementById("cfg-ifood").value = data.settings.ifoodUrl || "";
+          }
+        } else {
+          document.getElementById("cfg-whatsapp").value = "5551999999999";
+          document.getElementById("cfg-ifood").value = "https://www.ifood.com.br/";
+        }
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+      }
+      renderAdminItems();
+    }
+
+    function renderAdminItems() {
+      const container = document.getElementById("admin-items-list");
+      container.innerHTML = items.map((p, idx) => `
+        <div class="rounded-3xl bg-bordo-900/90 border border-white/10 p-4 sm:p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <img src="${p.image}" alt="${p.name}" class="w-14 h-14 rounded-2xl object-cover shrink-0" />
+              <div class="min-w-0">
+                <p class="font-bold text-sm sm:text-base text-white truncate">${p.name}</p>
+                <p class="text-xs text-[#D9C3C3] truncate">${p.desc}</p>
+              </div>
+            </div>
+
+            <label class="inline-flex items-center cursor-pointer shrink-0">
+              <input
+                type="checkbox"
+                ${p.promoActive ? "checked" : ""}
+                onchange="updateItemField(${idx}, 'promoActive', this.checked)"
+                class="sr-only peer"
+              />
+              <div class="relative w-11 h-6 bg-white/15 rounded-full peer peer-checked:bg-[#38B449] after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+              <span class="ml-2 text-xs font-bold ${p.promoActive ? "text-[#38B449]" : "text-white/50"}">
+                ${p.promoActive ? "Promo ON" : "Normal"}
+              </span>
+            </label>
+          </div>
+
+          <div class="mt-4 grid grid-cols-3 gap-2.5 pt-3 border-t border-white/5">
+            <div>
+              <label class="block text-[11px] text-[#D9C3C3] mb-1">Preço Cheio (R$)</label>
+              <input
+                type="number"
+                step="0.01"
+                value="${Number(p.fullPrice).toFixed(2)}"
+                onchange="updateItemField(${idx}, 'fullPrice', parseFloat(this.value) || 0)"
+                class="w-full h-10 px-3 rounded-xl bg-bordo-950 border border-white/15 text-xs text-white focus:outline-none focus:border-batata-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-[#D9C3C3] mb-1">Preço Promo (R$)</label>
+              <input
+                type="number"
+                step="0.01"
+                value="${Number(p.promoPrice).toFixed(2)}"
+                onchange="updateItemField(${idx}, 'promoPrice', parseFloat(this.value) || 0)"
+                class="w-full h-10 px-3 rounded-xl bg-bordo-950 border border-white/15 text-xs text-white focus:outline-none focus:border-batata-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-[#D9C3C3] mb-1">Selo Desconto</label>
+              <input
+                type="text"
+                value="${p.discountBadge}"
+                onchange="updateItemField(${idx}, 'discountBadge', this.value)"
+                class="w-full h-10 px-3 rounded-xl bg-bordo-950 border border-white/15 text-xs text-white focus:outline-none focus:border-batata-500"
+              />
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    window.updateItemField = function (index, field, value) {
+      items[index][field] = value;
+      renderAdminItems();
+    };
+
+    window.toggleAllPromos = function (state) {
+      items.forEach((p) => { p.promoActive = state; });
+      renderAdminItems();
+    };
+
+    window.saveToFirebase = async function () {
+      const btn = document.getElementById("save-btn");
+      const feedback = document.getElementById("save-feedback");
+
+      btn.disabled = true;
+      btn.textContent = "Salvando...";
+      feedback.classList.add("hidden");
+
+      const settings = {
+        whatsappNumber: document.getElementById("cfg-whatsapp").value.trim(),
+        ifoodUrl: document.getElementById("cfg-ifood").value.trim() || "https://www.ifood.com.br/"
+      };
+
+      try {
+        await setDoc(doc(db, "cardapio", "dados"), {
+          items,
+          settings,
+          updatedAt: new Date().toISOString()
+        });
+        feedback.classList.remove("hidden");
+        setTimeout(() => feedback.classList.add("hidden"), 4000);
+      } catch (err) {
+        alert("Erro ao salvar no Firebase. Verifique as regras de segurança e sua conexão.");
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Salvar Alterações no Cardápio";
+      }
+    };
+  </script>
+</body>
+</html>
