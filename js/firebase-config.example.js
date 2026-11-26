@@ -1,9 +1,9 @@
-// Copie este arquivo para js/firebase-config.js e preencha com as credenciais do seu projeto Firebase
+// Copie este ficheiro para js/firebase-config.js no seu ambiente local ou de publicação
 export const firebaseConfig = {
-  apiKey: "SUA_API_KEY_AQUI",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJETO_ID",
-  storageBucket: "SEU_PROJETO.firebasestorage.app",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId: "SEU_APP_ID"
+  apiKey: "AIzaSyAcxCipS6-6WTVO0cWPuDO1F3DkGRWpI4E",
+  authDomain: "batato-ec659.firebaseapp.com",
+  projectId: "batato-ec659",
+  storageBucket: "batato-ec659.firebasestorage.app",
+  messagingSenderId: "367636863162",
+  appId: "1:367636863162:web:91be711688c992f0350a83"
 };
