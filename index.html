@@ -110,6 +110,7 @@
         <img
           src="imagens/batatao-especial.jpg"
           alt="Batatô Especial com bacon crocante e queijo derretido"
+          onerror="handleImgError(this)"
           class="w-full h-full object-cover object-center scale-[1.02]"
         />
         <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent"></div>
@@ -148,7 +149,7 @@
 
         <a
           id="btn-ifood-hero"
-          href="https://www.ifood.com.br/"
+          href="https://www.ifood.com.br/delivery/canoas-rs/batato-fatima/da448384-4082-4767-9788-7390fc20be07"
           target="_blank"
           rel="noopener noreferrer"
           class="w-full py-4 rounded-full bg-ifood hover:brightness-110 active:scale-[0.98] text-white font-bold text-base shadow-lg shadow-black/40 transition text-center"
@@ -233,7 +234,7 @@
 
       <div class="px-5">
         <div class="w-full h-56 sm:h-64 rounded-[26px] overflow-hidden shadow-xl">
-          <img id="modal-img" src="" alt="" class="w-full h-full object-cover" />
+          <img id="modal-img" src="" alt="" onerror="handleImgError(this)" class="w-full h-full object-cover" />
         </div>
 
         <h3 id="modal-title" class="mt-5 font-display text-2xl sm:text-3xl text-batata-500 leading-tight"></h3>
@@ -348,7 +349,7 @@
 
           <a
             id="btn-ifood-cart"
-            href="https://www.ifood.com.br/"
+            href="https://www.ifood.com.br/delivery/canoas-rs/batato-fatima/da448384-4082-4767-9788-7390fc20be07"
             target="_blank"
             rel="noopener noreferrer"
             class="w-full h-12 rounded-full border border-ifood/60 text-white/90 hover:bg-ifood/15 font-bold text-xs flex items-center justify-center transition"
@@ -385,7 +386,16 @@
 
     const DEFAULT_SETTINGS = {
       whatsappNumber: "5551999999999",
-      ifoodUrl: "https://www.ifood.com.br/"
+      ifoodUrl: "https://www.ifood.com.br/delivery/canoas-rs/batato-fatima/da448384-4082-4767-9788-7390fc20be07"
+    };
+
+    const FALLBACK_IMAGE = "imagens/frango-cremoso.jpg";
+
+    window.handleImgError = function (img) {
+      if (img && !img.dataset.fallbackApplied) {
+        img.dataset.fallbackApplied = "true";
+        img.src = FALLBACK_IMAGE;
+      }
     };
 
     const DEFAULT_PRODUCTS = [
@@ -471,7 +481,6 @@
     let selectedAddons = [];
     let modalQty = 1;
 
-    // Inicializa Firebase e escuta alterações do Admin em tempo real
     try {
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
@@ -484,8 +493,9 @@
           }
           if (data.settings) {
             appSettings = { ...DEFAULT_SETTINGS, ...data.settings };
-            document.getElementById("btn-ifood-hero").href = appSettings.ifoodUrl;
-            document.getElementById("btn-ifood-cart").href = appSettings.ifoodUrl;
+            const ifoodLink = appSettings.ifoodUrl || DEFAULT_SETTINGS.ifoodUrl;
+            document.getElementById("btn-ifood-hero").href = ifoodLink;
+            document.getElementById("btn-ifood-cart").href = ifoodLink;
           }
           renderMenu();
         }
@@ -511,7 +521,13 @@
         return `
           <article class="rounded-[28px] bg-[#360808]/95 border border-white/5 overflow-hidden shadow-2xl shadow-black/60">
             <div class="relative h-60 sm:h-64 w-full overflow-hidden">
-              <img src="${p.image}" alt="${p.name}" loading="lazy" class="w-full h-full object-cover object-center" />
+              <img
+                src="${p.image || FALLBACK_IMAGE}"
+                alt="${p.name}"
+                loading="lazy"
+                onerror="handleImgError(this)"
+                class="w-full h-full object-cover object-center"
+              />
               ${showDiscount ? `
                 <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-[#E87A24] text-bordo-950 font-extrabold text-xs shadow-md">
                   ${p.discountBadge}
@@ -564,8 +580,11 @@
       selectedAddons = [];
       modalQty = 1;
 
-      document.getElementById("modal-img").src = currentProduct.image;
-      document.getElementById("modal-img").alt = currentProduct.name;
+      const modalImg = document.getElementById("modal-img");
+      delete modalImg.dataset.fallbackApplied;
+      modalImg.src = currentProduct.image || FALLBACK_IMAGE;
+      modalImg.alt = currentProduct.name;
+
       document.getElementById("modal-title").textContent = currentProduct.name;
       document.getElementById("modal-desc").textContent = currentProduct.desc;
       document.getElementById("modal-qty").textContent = "1";
@@ -718,7 +737,12 @@
           const addonsText = item.addons.map((a) => `+ ${a.name}`).join("<br>");
           return `
             <div class="rounded-2xl bg-[#380A0A] border border-white/10 p-4 flex items-center gap-3.5">
-              <img src="${item.product.image}" alt="${item.product.name}" class="w-16 h-16 rounded-xl object-cover shrink-0" />
+              <img
+                src="${item.product.image || FALLBACK_IMAGE}"
+                alt="${item.product.name}"
+                onerror="handleImgError(this)"
+                class="w-16 h-16 rounded-xl object-cover shrink-0"
+              />
               <div class="flex-1 min-w-0">
                 <p class="font-bold text-sm sm:text-base text-white leading-snug">
                   ${item.qty}x ${item.product.name}
