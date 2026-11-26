@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batatô — Seu novo jeito de amar batata!</title>
+  <meta name="description" content="Purê de batata cremoso com recheio generoso e queijo derretendo. Peça pelo WhatsApp ou iFood!" />
+  <link rel="icon" type="image/png" href="imagens/ico.png" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Archivo Black"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            bordo: {
+              950: '#230303',
+              900: '#2E0505',
+              800: '#3D0909',
+              700: '#520E0E',
+              600: '#6B1414',
+            },
+            batata: {
+              400: '#F8EA7E',
+              500: '#F4E268',
+              600: '#E5CF46',
+            },
+            ifood: '#EA1D2C',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 18%, #470A0A 0%, #240303 55%, #1D0202 100%);
+      color: #FFFFFF;
+      min-height: 100vh;
+    }
+
+    @keyframes floatLogo {
+      0%, 100% {
+        transform: translateY(0px) rotate(-1.5deg);
+      }
+      50% {
+        transform: translateY(-9px) rotate(1.5deg);
+      }
+    }
+
+    .logo-flutuante {
+      animation: floatLogo 3.6s ease-in-out infinite;
+      filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.85)) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.9));
+      will-change: transform;
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    @keyframes popIn {
+      0% { transform: scale(0.95) translateY(14px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .animate-pop { animation: popIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-batata-500 selection:text-bordo-950 pb-24">
+
+  <!-- CABEÇALHO FIXO -->
+  <header class="sticky top-0 z-40 bg-bordo-950/90 backdrop-blur-md border-b border-white/5">
+    <div class="max-w-lg mx-auto px-5 h-16 flex items-center justify-between">
+      <a href="#" class="font-display text-2xl tracking-tight text-batata-500 hover:opacity-90 transition">
+        Batatô
+      </a>
+
+      <button
+        onclick="openCart()"
+        aria-label="Abrir sacola"
+        class="relative w-11 h-11 rounded-full bg-batata-500 text-bordo-950 flex items-center justify-center shadow-lg shadow-black/40 active:scale-95 transition"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12l1 12H5L6 7z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 7V6a3 3 0 016 0v1" />
+        </svg>
+        <span
+          id="header-badge"
+          class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-[#D96B27] text-white text-[11px] font-extrabold flex items-center justify-center border-2 border-bordo-950"
+        >0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="max-w-lg mx-auto px-5 pt-4">
+
+    <!-- HERO SECTION -->
+    <section class="text-center">
+      <div class="relative w-full aspect-[4/3.6] rounded-[28px] overflow-hidden shadow-2xl shadow-black/70 border border-white/10">
+        <img
+          src="imagens/batatao-especial.jpg"
+          alt="Batatô Especial com bacon crocante e queijo derretido"
+          class="w-full h-full object-cover object-center scale-[1.02]"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent"></div>
+
+        <!-- Logo Flutuante sobre o Banner -->
+        <div class="logo-flutuante absolute bottom-4 left-4 w-[155px] sm:w-[175px] pointer-events-none select-none">
+          <img
+            src="imagens/logo.png"
+            alt="Logo Batatô"
+            class="w-full h-auto object-contain"
+          />
+        </div>
+      </div>
+
+      <p class="mt-7 text-[11px] sm:text-xs font-bold tracking-[0.28em] text-[#E6C7B8] uppercase">
+        SEU NOVO JEITO DE AMAR BATATA
+      </p>
+
+      <h1 class="mt-3 font-display text-[2.35rem] sm:text-[2.75rem] leading-[1.03] tracking-tight text-batata-500">
+        Cremosa.<br />
+        Gratinada.<br />
+        Irresistível.
+      </h1>
+
+      <p class="mt-4 text-sm sm:text-base text-[#E6D4D4] leading-relaxed max-w-sm mx-auto">
+        Purê de batata com recheio generoso e queijo derretendo. Escolha a sua e receba quentinha.
+      </p>
+
+      <div class="mt-7 flex flex-col gap-3.5">
+        <a
+          href="#cardapio"
+          class="w-full py-4 rounded-full bg-batata-500 hover:bg-batata-400 active:scale-[0.98] text-bordo-950 font-bold text-base shadow-lg shadow-black/40 transition text-center"
+        >
+          Ver cardápio
+        </a>
+
+        <a
+          id="btn-ifood-hero"
+          href="https://www.ifood.com.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full py-4 rounded-full bg-ifood hover:brightness-110 active:scale-[0.98] text-white font-bold text-base shadow-lg shadow-black/40 transition text-center"
+        >
+          Pedir no iFood
+        </a>
+      </div>
+    </section>
+
+    <!-- CARDÁPIO -->
+    <section id="cardapio" class="mt-14 pt-2">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h2 class="font-display text-3xl sm:text-[2.1rem] leading-[1.08] text-batata-500">
+            Escolha a sua<br />Batatô!
+          </h2>
+          <p class="mt-2.5 text-sm text-[#D9C3C3]">
+            Todas acompanham 1 ou 2 adicionais à sua escolha.
+          </p>
+        </div>
+
+        <span id="sync-status" class="mt-1 inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/50">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Ao vivo
+        </span>
+      </div>
+
+      <div id="menu-list" class="mt-7 flex flex-col gap-6">
+        <!-- Cards renderizados via JS -->
+      </div>
+    </section>
+
+    <!-- RODAPÉ -->
+    <footer class="mt-14 mb-6 text-center flex flex-col items-center">
+      <div class="w-36 mb-4">
+        <img src="imagens/logo.png" alt="Logo Batatô" class="w-full h-auto object-contain mx-auto drop-shadow-lg" />
+      </div>
+
+      <p class="text-[11px] tracking-[0.2em] text-[#A88B8B] uppercase">
+        © BATATÔ — FEITO COM AMOR E MUITA BATATA
+      </p>
+
+      <div class="mt-4">
+        <a
+          href="https://www.instagram.com/cs_code_solutions?exln=Ym1mNDMzYTYxa3d6"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[11px] text-white/35 hover:text-batata-500 transition"
+        >
+          Powered by CS Code Solutions
+        </a>
+      </div>
+    </footer>
+  </main>
+
+  <!-- BARRA FLUTUANTE INFERIOR -->
+  <div id="bottom-bar" class="hidden fixed bottom-0 inset-x-0 z-30 px-4 pb-4 pt-2 bg-gradient-to-t from-bordo-950 via-bordo-950/95 to-transparent">
+    <div class="max-w-lg mx-auto">
+      <button
+        onclick="openCart()"
+        class="w-full py-4 px-6 rounded-full bg-[#38B449] hover:bg-[#40C452] active:scale-[0.98] text-bordo-950 font-extrabold text-base flex items-center justify-between shadow-2xl shadow-black/70 transition"
+      >
+        <span>Ver sacola (<span id="bottom-bar-count">0</span>)</span>
+        <span id="bottom-bar-total">R$ 0,00</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL DE ACOMPANHAMENTOS -->
+  <div id="addon-modal" class="hidden fixed inset-0 z-50 bg-bordo-950/95 backdrop-blur-md overflow-y-auto">
+    <div class="max-w-lg mx-auto min-h-screen flex flex-col pb-8">
+      <div class="sticky top-0 z-10 bg-bordo-950/90 backdrop-blur-md px-5 h-16 flex items-center justify-between">
+        <span class="font-display text-2xl text-batata-500">Batatô</span>
+        <button
+          onclick="closeAddonModal()"
+          aria-label="Fechar"
+          class="w-10 h-10 rounded-full border border-batata-500/40 text-batata-500 flex items-center justify-center hover:bg-batata-500/10 transition"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="px-5">
+        <div class="w-full h-56 sm:h-64 rounded-[26px] overflow-hidden shadow-xl">
+          <img id="modal-img" src="" alt="" class="w-full h-full object-cover" />
+        </div>
+
+        <h3 id="modal-title" class="mt-5 font-display text-2xl sm:text-3xl text-batata-500 leading-tight"></h3>
+        <p id="modal-desc" class="mt-1.5 text-sm text-[#D9C3C3]"></p>
+
+        <div class="mt-5 rounded-2xl bg-[#3D0D0D] border border-white/5 px-4 py-3.5 flex items-center justify-between">
+          <div>
+            <p class="font-bold text-sm sm:text-base text-white">Escolha seu acompanhamento</p>
+            <p class="text-xs text-[#D9C3C3] mt-0.5">Escolha de 1 a 2</p>
+          </div>
+          <span id="addon-counter" class="px-3 py-1 rounded-full bg-bordo-950/70 text-xs font-extrabold text-batata-500">
+            0/2
+          </span>
+        </div>
+
+        <div id="addons-container" class="mt-3.5 flex flex-col gap-3"></div>
+
+        <div class="mt-6 grid grid-cols-12 gap-3 items-center">
+          <div class="col-span-5 h-16 rounded-full border border-white/15 bg-bordo-900/60 flex items-center justify-between px-4">
+            <button onclick="changeModalQty(-1)" class="w-8 h-8 rounded-full text-xl font-bold text-white/80 hover:text-white flex items-center justify-center">−</button>
+            <span id="modal-qty" class="font-extrabold text-base text-white">1</span>
+            <button onclick="changeModalQty(1)" class="w-8 h-8 rounded-full text-xl font-bold text-white/80 hover:text-white flex items-center justify-center">+</button>
+          </div>
+
+          <button
+            id="modal-confirm-btn"
+            onclick="confirmAddToCart()"
+            disabled
+            class="col-span-7 h-16 px-5 rounded-full bg-[#8D7034] text-bordo-950 font-extrabold text-sm flex items-center justify-between gap-2 transition disabled:cursor-not-allowed"
+          >
+            <span id="modal-confirm-label" class="text-left leading-tight">Escolha 1 adicional</span>
+            <span id="modal-confirm-price" class="whitespace-nowrap">R$ 0,00</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DA SACOLA -->
+  <div id="cart-modal" class="hidden fixed inset-0 z-50 bg-bordo-950/95 backdrop-blur-md overflow-y-auto">
+    <div class="max-w-lg mx-auto min-h-screen px-5 py-6 flex flex-col">
+      <div class="relative flex items-center justify-center py-2">
+        <h3 class="font-display text-2xl sm:text-3xl text-batata-500">Sua sacola</h3>
+        <button
+          onclick="closeCart()"
+          aria-label="Fechar sacola"
+          class="absolute right-0 w-10 h-10 rounded-full border border-batata-500/40 text-batata-500 flex items-center justify-center hover:bg-batata-500/10 transition"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div id="cart-items-list" class="mt-5 flex flex-col gap-3"></div>
+
+      <div id="cart-empty" class="hidden my-auto py-16 text-center">
+        <p class="font-display text-xl text-batata-500">Sua sacola está vazia</p>
+        <p class="text-sm text-[#D9C3C3] mt-2">Escolha uma Batatô quentinha no cardápio.</p>
+        <button onclick="closeCart()" class="mt-6 px-7 py-3.5 rounded-full bg-batata-500 text-bordo-950 font-bold text-sm">
+          Voltar ao cardápio
+        </button>
+      </div>
+
+      <div id="cart-checkout-area" class="mt-6">
+        <div class="flex items-center justify-between py-2">
+          <span class="font-display text-xl text-white">Total</span>
+          <span id="cart-total-price" class="font-display text-2xl text-batata-500">R$ 0,00</span>
+        </div>
+
+        <form onsubmit="sendOrderWhatsApp(event)" class="mt-4 flex flex-col gap-3.5">
+          <input
+            type="text"
+            id="cust-name"
+            required
+            placeholder="Seu nome"
+            class="w-full h-14 px-5 rounded-full bg-[#330808] border border-white/15 text-white placeholder:text-[#B89B9B] text-sm focus:outline-none focus:border-batata-500 transition"
+          />
+
+          <input
+            type="text"
+            id="cust-address"
+            required
+            placeholder="Endereço de entrega"
+            class="w-full h-14 px-5 rounded-full bg-[#330808] border border-white/15 text-white placeholder:text-[#B89B9B] text-sm focus:outline-none focus:border-batata-500 transition"
+          />
+
+          <div class="relative">
+            <select
+              id="cust-payment"
+              class="w-full h-14 px-5 rounded-full bg-[#330808] border border-white/15 text-white text-sm appearance-none focus:outline-none focus:border-batata-500 transition"
+            >
+              <option value="Pix">Pix</option>
+              <option value="Cartão de Crédito">Cartão de Crédito</option>
+              <option value="Cartão de Débito">Cartão de Débito</option>
+              <option value="Dinheiro">Dinheiro</option>
+            </select>
+            <span class="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-white/60 text-xs">▼</span>
+          </div>
+
+          <textarea
+            id="cust-notes"
+            rows="3"
+            placeholder="Observações (troco, sem cebola...)"
+            class="w-full p-5 rounded-[24px] bg-[#330808] border border-white/15 text-white placeholder:text-[#B89B9B] text-sm focus:outline-none focus:border-batata-500 transition resize-none"
+          ></textarea>
+
+          <button
+            type="submit"
+            class="mt-2 w-full h-14 rounded-full bg-[#38B449] hover:bg-[#40C452] active:scale-[0.98] text-bordo-950 font-extrabold text-base shadow-xl shadow-black/40 transition"
+          >
+            Finalizar no WhatsApp
+          </button>
+
+          <a
+            id="btn-ifood-cart"
+            href="https://www.ifood.com.br/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full h-12 rounded-full border border-ifood/60 text-white/90 hover:bg-ifood/15 font-bold text-xs flex items-center justify-center transition"
+          >
+            Ou pedir direto pelo iFood
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FALLBACK WHATSAPP -->
+  <div id="fallback-modal" class="hidden fixed inset-0 z-[60] bg-black/85 backdrop-blur-sm flex items-center justify-center p-5">
+    <div class="animate-pop bg-bordo-900 border border-batata-500/30 rounded-3xl max-w-md w-full p-6">
+      <h4 class="font-display text-lg text-batata-500">Pedido pronto para envio!</h4>
+      <p class="text-xs text-[#D9C3C3] mt-1">Copie a mensagem abaixo e envie no WhatsApp da Batatô:</p>
+      <textarea id="fallback-text" readonly rows="8" class="mt-3 w-full rounded-2xl bg-bordo-950 border border-white/10 p-3 text-xs text-white font-mono"></textarea>
+      <div class="mt-4 flex gap-3">
+        <button onclick="copyFallbackText()" class="flex-1 py-3 rounded-full bg-batata-500 text-bordo-950 font-bold text-xs">
+          Copiar pedido
+        </button>
+        <button onclick="document.getElementById('fallback-modal').classList.add('hidden')" class="px-5 py-3 rounded-full bg-white/10 text-white font-bold text-xs">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT PRINCIPAL + FIREBASE FIRESTORE EM TEMPO REAL -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { firebaseConfig } from "./js/firebase-config.js";
+
+    const DEFAULT_SETTINGS = {
+      whatsappNumber: "5551999999999",
+      ifoodUrl: "https://www.ifood.com.br/"
+    };
+
+    const DEFAULT_PRODUCTS = [
+      {
+        id: "especial",
+        name: "Batatô Especial",
+        desc: "Frango, bacon e cheddar",
+        fullPrice: 32.90,
+        promoPrice: 29.61,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "Mais pedida",
+        image: "imagens/batatao-especial.jpg"
+      },
+      {
+        id: "frango",
+        name: "Batatô Frango cremoso com queijo mussarela!",
+        desc: "Frango cremoso",
+        fullPrice: 29.90,
+        promoPrice: 27.90,
+        discountBadge: "-7%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/frango-cremoso.jpg"
+      },
+      {
+        id: "bacon",
+        name: "Batatô Bacon",
+        desc: "Bacon crocante com queijo mussarela!",
+        fullPrice: 31.90,
+        promoPrice: 28.90,
+        discountBadge: "-9%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/batatao-especial.jpg"
+      },
+      {
+        id: "calabresa",
+        name: "Batatô Calabresa",
+        desc: "Calabresa acebolada e queijo derretido",
+        fullPrice: 30.90,
+        promoPrice: 27.81,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/calabresa.jpg"
+      },
+      {
+        id: "carne",
+        name: "Batatô Carne",
+        desc: "Carne desfiada e queijo cremoso",
+        fullPrice: 31.90,
+        promoPrice: 28.71,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/carne.jpg"
+      },
+      {
+        id: "brocolis",
+        name: "Batatô Brócolis com Bacon",
+        desc: "Brócolis, molho cremoso, queijo e bacon",
+        fullPrice: 27.90,
+        promoPrice: 25.11,
+        discountBadge: "-10%",
+        promoActive: false,
+        tag: "",
+        image: "imagens/frango-cremoso.jpg"
+      }
+    ];
+
+    const ADDONS = [
+      { id: "cheddar", name: "Cheddar cremoso", price: 0 },
+      { id: "catupiry", name: "Catupiry", price: 0 },
+      { id: "farofa-bacon", name: "Farofa de bacon", price: 3.00 },
+      { id: "batata-palha", name: "Batata palha", price: 0 }
+    ];
+
+    let appSettings = { ...DEFAULT_SETTINGS };
+    let products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+    let cart = [];
+    let currentProduct = null;
+    let selectedAddons = [];
+    let modalQty = 1;
+
+    // Inicializa Firebase e escuta alterações do Admin em tempo real
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      onSnapshot(doc(db, "cardapio", "dados"), (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+          if (Array.isArray(data.items) && data.items.length > 0) {
+            products = data.items;
+          }
+          if (data.settings) {
+            appSettings = { ...DEFAULT_SETTINGS, ...data.settings };
+            document.getElementById("btn-ifood-hero").href = appSettings.ifoodUrl;
+            document.getElementById("btn-ifood-cart").href = appSettings.ifoodUrl;
+          }
+          renderMenu();
+        }
+      });
+    } catch (err) {
+      console.warn("Usando catálogo padrão local:", err);
+    }
+
+    function formatBRL(val) {
+      return Number(val).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
+
+    function getActivePrice(product) {
+      return product.promoActive ? Number(product.promoPrice) : Number(product.fullPrice);
+    }
+
+    window.renderMenu = function () {
+      const container = document.getElementById("menu-list");
+      container.innerHTML = products.map((p) => {
+        const activePrice = getActivePrice(p);
+        const showDiscount = Boolean(p.promoActive);
+
+        return `
+          <article class="rounded-[28px] bg-[#360808]/95 border border-white/5 overflow-hidden shadow-2xl shadow-black/60">
+            <div class="relative h-60 sm:h-64 w-full overflow-hidden">
+              <img src="${p.image}" alt="${p.name}" loading="lazy" class="w-full h-full object-cover object-center" />
+              ${showDiscount ? `
+                <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-[#E87A24] text-bordo-950 font-extrabold text-xs shadow-md">
+                  ${p.discountBadge}
+                </span>
+              ` : ""}
+              ${p.tag ? `
+                <span class="absolute top-3.5 right-3.5 px-3.5 py-1 rounded-full bg-batata-500 text-bordo-950 font-bold text-xs shadow-md">
+                  ${p.tag}
+                </span>
+              ` : ""}
+            </div>
+
+            <div class="p-5 sm:p-6">
+              <h3 class="font-display text-xl sm:text-2xl text-white leading-snug">
+                ${p.name}
+              </h3>
+              <p class="mt-1.5 text-sm text-[#D9C3C3]">
+                ${p.desc}
+              </p>
+
+              <div class="mt-5 flex items-end justify-between gap-3">
+                <div>
+                  ${showDiscount ? `
+                    <span class="block text-xs text-[#A88B8B] line-through mb-0.5">
+                      ${formatBRL(p.fullPrice)}
+                    </span>
+                  ` : ""}
+                  <span class="font-display text-2xl sm:text-[1.65rem] text-batata-500 leading-none">
+                    ${formatBRL(activePrice)}
+                  </span>
+                </div>
+
+                <button
+                  onclick="openAddonModal('${p.id}')"
+                  class="px-6 py-3.5 rounded-full bg-batata-500 hover:bg-batata-400 active:scale-95 text-bordo-950 font-extrabold text-sm shadow-lg shadow-black/40 transition"
+                >
+                  + Quero
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    };
+
+    window.openAddonModal = function (productId) {
+      currentProduct = products.find((p) => p.id === productId);
+      if (!currentProduct) return;
+
+      selectedAddons = [];
+      modalQty = 1;
+
+      document.getElementById("modal-img").src = currentProduct.image;
+      document.getElementById("modal-img").alt = currentProduct.name;
+      document.getElementById("modal-title").textContent = currentProduct.name;
+      document.getElementById("modal-desc").textContent = currentProduct.desc;
+      document.getElementById("modal-qty").textContent = "1";
+
+      renderAddonOptions();
+      updateModalFooter();
+
+      document.getElementById("addon-modal").classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    };
+
+    window.closeAddonModal = function () {
+      document.getElementById("addon-modal").classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    };
+
+    function renderAddonOptions() {
+      const container = document.getElementById("addons-container");
+      container.innerHTML = ADDONS.map((addon) => {
+        const isSelected = selectedAddons.includes(addon.id);
+        return `
+          <button
+            type="button"
+            onclick="toggleAddon('${addon.id}')"
+            class="w-full px-5 py-4 rounded-2xl border transition flex items-center justify-between text-left ${
+              isSelected
+                ? "bg-[#4A1111] border-batata-500"
+                : "bg-[#310707] border-white/10 hover:border-white/25"
+            }"
+          >
+            <div class="text-sm sm:text-base">
+              <span class="font-semibold text-white">${addon.name}</span>
+              ${addon.price > 0 ? `<span class="text-[#E87A24] font-bold ml-1.5">+ ${formatBRL(addon.price)}</span>` : ""}
+            </div>
+
+            <span class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition ${
+              isSelected
+                ? "bg-batata-500 text-bordo-950"
+                : "bg-[#4A1212] text-white/80"
+            }">
+              ${isSelected ? "✓" : "+"}
+            </span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    window.toggleAddon = function (addonId) {
+      const idx = selectedAddons.indexOf(addonId);
+      if (idx > -1) {
+        selectedAddons.splice(idx, 1);
+      } else if (selectedAddons.length < 2) {
+        selectedAddons.push(addonId);
+      } else {
+        selectedAddons.shift();
+        selectedAddons.push(addonId);
+      }
+      renderAddonOptions();
+      updateModalFooter();
+    };
+
+    window.changeModalQty = function (delta) {
+      modalQty = Math.max(1, modalQty + delta);
+      document.getElementById("modal-qty").textContent = modalQty;
+      updateModalFooter();
+    };
+
+    function updateModalFooter() {
+      const count = selectedAddons.length;
+      document.getElementById("addon-counter").textContent = `${count}/2`;
+
+      const addonsSum = selectedAddons.reduce((sum, id) => {
+        const found = ADDONS.find((a) => a.id === id);
+        return sum + (found ? found.price : 0);
+      }, 0);
+
+      const unitPrice = getActivePrice(currentProduct) + addonsSum;
+      const total = unitPrice * modalQty;
+
+      document.getElementById("modal-confirm-price").textContent = formatBRL(total);
+
+      const btn = document.getElementById("modal-confirm-btn");
+      const label = document.getElementById("modal-confirm-label");
+
+      if (count >= 1) {
+        btn.disabled = false;
+        btn.classList.remove("bg-[#8D7034]");
+        btn.classList.add("bg-batata-500", "hover:bg-batata-400", "shadow-lg", "shadow-black/40");
+        label.textContent = "Adicionar";
+      } else {
+        btn.disabled = true;
+        btn.classList.add("bg-[#8D7034]");
+        btn.classList.remove("bg-batata-500", "hover:bg-batata-400", "shadow-lg", "shadow-black/40");
+        label.innerHTML = "Escolha 1<br>adicional";
+      }
+    }
+
+    window.confirmAddToCart = function () {
+      if (selectedAddons.length < 1 || !currentProduct) return;
+
+      const chosenAddons = selectedAddons.map((id) => ADDONS.find((a) => a.id === id));
+      const addonsExtra = chosenAddons.reduce((acc, item) => acc + item.price, 0);
+      const unitPrice = getActivePrice(currentProduct) + addonsExtra;
+
+      cart.push({
+        uid: Date.now() + Math.random(),
+        product: currentProduct,
+        addons: chosenAddons,
+        qty: modalQty,
+        unitPrice,
+        subtotal: unitPrice * modalQty
+      });
+
+      closeAddonModal();
+      updateCartUI();
+    };
+
+    function updateCartUI() {
+      const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+      const totalValue = cart.reduce((acc, item) => acc + item.subtotal, 0);
+
+      const headerBadge = document.getElementById("header-badge");
+      const bottomBar = document.getElementById("bottom-bar");
+
+      if (totalQty > 0) {
+        headerBadge.textContent = totalQty;
+        headerBadge.classList.remove("hidden");
+
+        document.getElementById("bottom-bar-count").textContent = totalQty;
+        document.getElementById("bottom-bar-total").textContent = formatBRL(totalValue);
+        bottomBar.classList.remove("hidden");
+      } else {
+        headerBadge.classList.add("hidden");
+        bottomBar.classList.add("hidden");
+      }
+
+      const listEl = document.getElementById("cart-items-list");
+      const emptyEl = document.getElementById("cart-empty");
+      const checkoutEl = document.getElementById("cart-checkout-area");
+
+      if (cart.length === 0) {
+        listEl.innerHTML = "";
+        emptyEl.classList.remove("hidden");
+        checkoutEl.classList.add("hidden");
+      } else {
+        emptyEl.classList.add("hidden");
+        checkoutEl.classList.remove("hidden");
+
+        listEl.innerHTML = cart.map((item, index) => {
+          const addonsText = item.addons.map((a) => `+ ${a.name}`).join("<br>");
+          return `
+            <div class="rounded-2xl bg-[#380A0A] border border-white/10 p-4 flex items-center gap-3.5">
+              <img src="${item.product.image}" alt="${item.product.name}" class="w-16 h-16 rounded-xl object-cover shrink-0" />
+              <div class="flex-1 min-w-0">
+                <p class="font-bold text-sm sm:text-base text-white leading-snug">
+                  ${item.qty}x ${item.product.name}
+                </p>
+                <p class="text-xs text-[#D9C3C3] mt-0.5 leading-relaxed">
+                  ${addonsText}
+                </p>
+                <p class="font-extrabold text-sm text-batata-500 mt-1">
+                  ${formatBRL(item.subtotal)}
+                </p>
+              </div>
+              <button
+                onclick="removeCartItem(${index})"
+                aria-label="Remover item"
+                class="p-2 text-white/40 hover:text-red-400 transition"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          `;
+        }).join("");
+
+        document.getElementById("cart-total-price").textContent = formatBRL(totalValue);
+      }
+    }
+
+    window.removeCartItem = function (index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    };
+
+    window.openCart = function () {
+      updateCartUI();
+      document.getElementById("cart-modal").classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    };
+
+    window.closeCart = function () {
+      document.getElementById("cart-modal").classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    };
+
+    window.sendOrderWhatsApp = function (e) {
+      e.preventDefault();
+      if (cart.length === 0) return;
+
+      const name = document.getElementById("cust-name").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+      const payment = document.getElementById("cust-payment").value;
+      const notes = document.getElementById("cust-notes").value.trim();
+      const total = cart.reduce((acc, i) => acc + i.subtotal, 0);
+
+      let msg = `*NOVO PEDIDO — BATATÔ*\n\n`;
+      msg += `*Cliente:* ${name}\n`;
+      msg += `*Endereço:* ${address}\n`;
+      msg += `*Pagamento:* ${payment}\n`;
+      if (notes) msg += `*Obs.:* ${notes}\n`;
+      msg += `\n*ITENS DO PEDIDO:*\n`;
+
+      cart.forEach((item) => {
+        const addons = item.addons.map((a) => a.name).join(", ");
+        msg += `• *${item.qty}x ${item.product.name}*\n`;
+        msg += `   _Acompanhamentos:_ ${addons}\n`;
+        msg += `   _Valor:_ ${formatBRL(item.subtotal)}\n`;
+      });
+
+      msg += `\n*TOTAL: ${formatBRL(total)}*`;
+
+      const cleanPhone = String(appSettings.whatsappNumber || "").replace(/\D/g, "");
+      const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+      const win = window.open(url, "_blank");
+
+      if (!win || win.closed || typeof win.closed === "undefined") {
+        document.getElementById("fallback-text").value = msg;
+        document.getElementById("fallback-modal").classList.remove("hidden");
+      }
+    };
+
+    window.copyFallbackText = function () {
+      const el = document.getElementById("fallback-text");
+      el.select();
+      navigator.clipboard.writeText(el.value);
+    };
+
+    renderMenu();
+  </script>
+</body>
+</html>
