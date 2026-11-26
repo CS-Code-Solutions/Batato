@@ -131,7 +131,7 @@
           <input
             type="url"
             id="cfg-ifood"
-            placeholder="https://www.ifood.com.br/delivery/..."
+            placeholder="https://www.ifood.com.br/delivery/canoas-rs/batato-fatima/da448384-4082-4767-9788-7390fc20be07"
             class="w-full h-11 px-4 rounded-xl bg-bordo-950 border border-white/15 text-sm text-white focus:outline-none focus:border-batata-500"
           />
         </div>
@@ -202,6 +202,9 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    const DEFAULT_IFOOD_URL = "https://www.ifood.com.br/delivery/canoas-rs/batato-fatima/da448384-4082-4767-9788-7390fc20be07";
+    const FALLBACK_IMAGE = "imagens/frango-cremoso.jpg";
 
     const INITIAL_PRODUCTS = [
       {
@@ -322,11 +325,11 @@
           }
           if (data.settings) {
             document.getElementById("cfg-whatsapp").value = data.settings.whatsappNumber || "";
-            document.getElementById("cfg-ifood").value = data.settings.ifoodUrl || "";
+            document.getElementById("cfg-ifood").value = data.settings.ifoodUrl || DEFAULT_IFOOD_URL;
           }
         } else {
           document.getElementById("cfg-whatsapp").value = "5551999999999";
-          document.getElementById("cfg-ifood").value = "https://www.ifood.com.br/";
+          document.getElementById("cfg-ifood").value = DEFAULT_IFOOD_URL;
         }
       } catch (err) {
         console.error("Erro ao carregar dados:", err);
@@ -340,7 +343,12 @@
         <div class="rounded-3xl bg-bordo-900/90 border border-white/10 p-4 sm:p-5">
           <div class="flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
-              <img src="${p.image}" alt="${p.name}" class="w-14 h-14 rounded-2xl object-cover shrink-0" />
+              <img
+                src="${p.image || FALLBACK_IMAGE}"
+                alt="${p.name}"
+                onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
+                class="w-14 h-14 rounded-2xl object-cover shrink-0"
+              />
               <div class="min-w-0">
                 <p class="font-bold text-sm sm:text-base text-white truncate">${p.name}</p>
                 <p class="text-xs text-[#D9C3C3] truncate">${p.desc}</p>
@@ -418,7 +426,7 @@
 
       const settings = {
         whatsappNumber: document.getElementById("cfg-whatsapp").value.trim(),
-        ifoodUrl: document.getElementById("cfg-ifood").value.trim() || "https://www.ifood.com.br/"
+        ifoodUrl: document.getElementById("cfg-ifood").value.trim() || DEFAULT_IFOOD_URL
       };
 
       try {
