@@ -48,6 +48,27 @@
       background: radial-gradient(circle at 50% 18%, #470A0A 0%, #240303 55%, #1D0202 100%);
       color: #FFFFFF;
       min-height: 100vh;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    img {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+
+    input,
+    textarea,
+    select,
+    [contenteditable],
+    [contenteditable="true"] {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
     }
 
     @keyframes floatLogo {
@@ -377,6 +398,62 @@
       </div>
     </div>
   </div>
+
+  <!-- TRAVA DE INTERFACE (TEXTOS E IMAGENS) -->
+  <script>
+    (function () {
+      function isEditableElement(el) {
+        if (!el || !el.closest) return false;
+        return Boolean(el.closest("input, textarea, select, [contenteditable], [contenteditable='true']"));
+      }
+
+      document.addEventListener("contextmenu", function (e) {
+        if (!isEditableElement(e.target)) {
+          e.preventDefault();
+        }
+      });
+
+      document.addEventListener("dragstart", function (e) {
+        e.preventDefault();
+      });
+
+      document.addEventListener("selectstart", function (e) {
+        if (!isEditableElement(e.target)) {
+          e.preventDefault();
+        }
+      });
+
+      document.addEventListener("copy", function (e) {
+        if (!isEditableElement(e.target)) {
+          e.preventDefault();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        const key = (e.key || "").toLowerCase();
+        const mod = e.ctrlKey || e.metaKey;
+
+        if (key === "f12") {
+          e.preventDefault();
+          return;
+        }
+
+        if (mod && (key === "u" || key === "s")) {
+          e.preventDefault();
+          return;
+        }
+
+        if (mod && e.shiftKey && (key === "i" || key === "j" || key === "c")) {
+          e.preventDefault();
+          return;
+        }
+
+        if (mod && key === "c" && !isEditableElement(e.target)) {
+          e.preventDefault();
+        }
+      });
+    })();
+  </script>
 
   <!-- SCRIPT PRINCIPAL + FIREBASE FIRESTORE EM TEMPO REAL -->
   <script type="module">
