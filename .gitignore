@@ -1,0 +1,4 @@
+# Chaves e configurações locais sensíveis
+js/firebase-config.js
+.env
+.DS_Store
